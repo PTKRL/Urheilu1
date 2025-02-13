@@ -4,7 +4,7 @@ class Henkilo {
     this._etunimet = etunimet;
     this._sukunimi = sukunimi;
     this._kutsumanimi = kutsumanimi;
-    this._syntymavuosi = syntymavuosi;
+    this._syntymavuosi = new Date(syntymavuosi, 0, 1);
   }
 
   get etunimet() {
@@ -32,11 +32,17 @@ class Henkilo {
   }
 
   get syntymavuosi() {
-    return this._syntymavuosi;
+    return this._syntymavuosi.getFullYear();
   }
 
   set syntymavuosi(uusiSyntymavuosi) {
-    this._syntymavuosi = uusiSyntymavuosi;
+    if (uusiSyntymavuosi instanceof Date) {
+      this._syntymavuosi = uusiSyntymavuosi;
+    } else if (typeof uusiSyntymavuosi === "number") {
+      this._syntymavuosi = new Date(uusiSyntymavuosi, 0, 1);
+    } else {
+      throw new Error("Syntymävuoden on oltava joko numero tai Date-olio.");
+    }
   }
 }
 
@@ -90,6 +96,16 @@ class Urheilija extends Henkilo {
   set saavutukset(uusiSaavutukset) {
     this._saavutukset = uusiSaavutukset;
   }
+
+  toString() {
+    return `Urheilija: ${this.etunimet} ${this.sukunimi} 
+Kutsumanimi: ${this.kutsumanimi}  
+Kuva: ${this.kuva}
+Syntymävuosi: ${this.syntymavuosi} 
+Laji: ${this.laji} 
+Paino: ${this.omapaino} kg 
+Saavutukset: ${this.saavutukset}`;
+  }
 }
 
 // Esimerkkejä urheilijoista
@@ -115,5 +131,5 @@ const urheilija2 = new Urheilija(
   "Euroopan mestaruus"
 );
 
-console.log(urheilija1);
-console.log(urheilija2);
+console.log(urheilija1.toString());
+console.log(urheilija2.toString());
